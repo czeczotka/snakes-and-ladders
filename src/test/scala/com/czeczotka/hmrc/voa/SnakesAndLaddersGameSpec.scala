@@ -2,7 +2,7 @@ package com.czeczotka.hmrc.voa
 
 import org.scalatest.{FeatureSpec, GivenWhenThen}
 
-class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen {
+class SnakesAndLaddersGameSpec extends FeatureSpec with GivenWhenThen {
 
   feature("Moving Your Token") {
 
@@ -12,7 +12,7 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen {
       info("So that I can get closer to the goal")
 
       Given("the game is started")
-      val game = new SnakesAndLadders
+      val game = new SnakesAndLaddersGame
 
       When("the token is placed on the board")
       val token = game.addToken()
@@ -39,14 +39,14 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen {
       info("So that there is an element of chance in the game")
 
       Given("the game is started")
-      val game = new SnakesAndLadders
+      val game = new SnakesAndLaddersGame
       val token = game.addToken()
 
       When("the player rolls a dice")
-      val dice = SnakesAndLadders.roll()
+      val dice = SnakesAndLaddersGame.roll()
 
       Then("the result should be between 1-6 inclusive")
-      assert((dice +: List.fill(1000)(SnakesAndLadders.roll())).forall(r => r >= 1 && r <= 6))
+      assert((dice +: List.fill(1000)(SnakesAndLaddersGame.roll())).forall(r => r >= 1 && r <= 6))
 
       When("they move their token")
       game.moveToken(token, dice)
@@ -61,7 +61,7 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen {
       info("So that I can gloat to everyone around")
 
       Given("the game is started")
-      val game = new SnakesAndLadders
+      val game = new SnakesAndLaddersGame
       val token = game.addToken()
 
       And("the token is on square 97")
@@ -85,6 +85,53 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen {
 
       And("the player has won the game")
       assert(game.result === Some(token))
+    }
+  }
+
+  feature("Snakes and Ladders") {
+
+    scenario("Snakes Go Down, Not Up") {
+      info("As a player")
+      info("I want snakes to move my token down")
+      info("So that the game is more fun")
+
+      Given("there is a snake connecting squares 2 and 12")
+      val game = new SnakesAndLaddersGame(Map(12 -> 2))
+      val token = game.addToken()
+
+      When("the token lands on square 2")
+      game.moveToken(token, 1)
+
+      Then("the token is on square 2")
+      assert(game.position(token) === 2)
+
+      When("the token lands on square 12")
+      game.moveToken(token, 10)
+
+      Then("the token is on square 2")
+      assert(game.position(token) === 2)
+    }
+
+    scenario("Ladders Go Up, Not Down") {
+      info("As a player")
+      info("I want ladders to move my token up")
+      info("So that the game is more fun")
+
+      Given("there is a ladder connecting squares 2 and 12")
+      val game = new SnakesAndLaddersGame(Map(2 -> 12))
+      val token = game.addToken()
+
+      When("the token lands on square 2")
+      game.moveToken(token, 1)
+
+      Then("the token is on square 12")
+      assert(game.position(token) === 12)
+
+      When("the token lands on square 12")
+      game.moveToken(token, 0)
+
+      Then("the token is on square 12")
+      assert(game.position(token) === 12)
     }
   }
 }

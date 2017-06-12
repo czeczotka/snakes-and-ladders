@@ -2,7 +2,7 @@ package com.czeczotka.hmrc.voa
 
 import scala.collection.mutable
 
-class SnakesAndLadders {
+class SnakesAndLaddersGame(snakesAndLadders: Map[Int, Int] = Map()) {
 
   private var tokens = 0
   private var positions = mutable.Map[Int, Int]().withDefaultValue(0)
@@ -17,7 +17,12 @@ class SnakesAndLadders {
 
   def moveToken(token: Int, moves: Int): Unit = {
     val next = positions(token) + moves
-    if (next <= 100) positions(token) = next
+    if (next <= 100) {
+      snakesAndLadders.get(next) match {
+        case Some(value) => positions(token) = value
+        case None => positions(token) = next
+      }
+    }
   }
 
   def result(): Option[Int] = positions.find {
@@ -26,7 +31,7 @@ class SnakesAndLadders {
 
 }
 
-object SnakesAndLadders {
+object SnakesAndLaddersGame {
 
   private val r = scala.util.Random
 
