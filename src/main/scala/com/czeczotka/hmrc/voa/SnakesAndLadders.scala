@@ -16,9 +16,13 @@ class SnakesAndLadders {
   def position(token: Int) = positions(token)
 
   def moveToken(token: Int, moves: Int): Unit = {
-    val current = positions(token)
-    positions(token) = current + moves
+    val next = positions(token) + moves
+    if (next <= 100) positions(token) = next
   }
+
+  def result(): Option[Int] = positions.find {
+    case (token, position) => position == 100
+  }.map(_._1)
 
 }
 

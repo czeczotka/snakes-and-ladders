@@ -59,7 +59,32 @@ class SnakesAndLaddersSpec extends FeatureSpec with GivenWhenThen {
       info("As a player")
       info("I want to be able to win the game")
       info("So that I can gloat to everyone around")
-      pending
+
+      Given("the game is started")
+      val game = new SnakesAndLadders
+      val token = game.addToken()
+
+      And("the token is on square 97")
+      game.moveToken(token, 96)
+      assert(game.position(token) === 97)
+
+      When("the token is moved 4 spaces")
+      game.moveToken(token, 4)
+
+      Then("the token is on square 97")
+      assert(game.position(token) === 97)
+
+      And("the player has not won the game")
+      assert(game.result === None)
+
+      When("the token is moved 3 spaces")
+      game.moveToken(token, 3)
+
+      Then("the token is on square 100")
+      assert(game.position(token) === 100)
+
+      And("the player has won the game")
+      assert(game.result === Some(token))
     }
   }
 }
