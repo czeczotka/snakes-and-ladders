@@ -21,3 +21,11 @@ class SnakesAndLadders {
   }
 
 }
+
+object SnakesAndLadders {
+
+  private val r = scala.util.Random
+
+  def roll(): Int = r.nextInt(6) + 1
+
+}
